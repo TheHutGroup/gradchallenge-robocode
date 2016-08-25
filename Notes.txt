@@ -1,0 +1,31 @@
+* Focus is on machine learning
+* Live Streaming of Robots?
+
+* Focus on most destructive, outright dangerous tanks
+
+* From a given date they shift into weekly battles
+.. When is that date?
+
+* Most accurate tanks, most fuel efficient
+
+* http://robowiki.net/wiki/Robocode_Download_And_Install
+.. System Requirements for Robocode
+.. The anatomy of a robot
+.. Getting started with Robocode
+.. My First Robot Tutorial
+.. Robocode Game Physics
+.. Scoring in Robocode
+.. Using the robot console
+.. Downloading other robots
+.. Learning from other robots
+.. Package your robot
+.. Frequently Asked Questions (FAQ)
+.. Articles about Robocode
+.. Starting Robocode from the command line
+.. Graphical debugging
+.. Using Eclipse as IDE
+.. Creating a project for your robots
+.. Creating a robot in Eclipse
+.. Running your robot from Eclipse
+.. Debugging your robot with Eclipse
+

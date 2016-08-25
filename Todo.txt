@@ -1,0 +1,5 @@
+* Visit http://robocode.sourceforge.net/
+* Download the Robocode API
+* Simple Strategy for the training bot
+* Go through the robocode menu from the application as well
+
