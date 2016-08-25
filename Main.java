@@ -24,9 +24,11 @@ import java.net.URLClassLoader;
 	 Battle b2 = new Battle("josh.Corners", "sample.Corners", 5);
 	 battleQueue.add(b1);
 	 battleQueue.add(b2);
-	 BattleRunner bRunner = new BattleRunner(battleQueue, args.length > 1 && args[0] == "-v");
+	 BattleRunner bRunner = new BattleRunner(battleQueue, args.length > 1 && args[0].equals("-v"));
+	 bRunner.init();
 	 bRunner.runNextBattle();
 	 bRunner.runNextBattle();
+	 bRunner.shutdown();
 	 
      }
  }

@@ -28,14 +28,12 @@ public class BattleRunner implements IBattleRunner {
     public BattleRunner(Queue<Battle> battles, boolean debug){
 	this.battles = battles;
 	handleToBattleMapper = new HashMap<BattleHandle, Battle>();
-	handleToBattleMapper = new HashMap<BattleHandle, Battle>();
          // Disable log messages from Robocode
         RobocodeEngine.setLogMessagesEnabled(debug);
          // Create the RobocodeEngine
          //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
         engine = new RobocodeEngine(new java.io.File(ROBOCODE_DIR)); // Run from C:/Robocode
-
-    }
+}
 
     public void init(){
          // Add our own battle listener to the RobocodeEngine 
@@ -45,7 +43,6 @@ public class BattleRunner implements IBattleRunner {
          engine.setVisible(true);
  
          // Setup the battle specification
- 
     }
 
     public void shutdown() {
