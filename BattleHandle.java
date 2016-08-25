@@ -1,9 +1,13 @@
 public class BattleHandle {
     
     int BID;
-    static int nextBID = 0;
+    private static int nextBID = 0;
 
-    public static nextID(){
+    public BattleHandle(){
+	BID = nextID();
+    }
+
+    private static int nextID(){
 	return ++nextBID;
     }
     

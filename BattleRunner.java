@@ -25,14 +25,16 @@ public class BattleRunner implements IBattleRunner {
 
     public static final String ROBOCODE_DIR = "C:/robocode";
 
-    public BattleRunner(){
+    public BattleRunner(Queue<Battle> battles, boolean debug){
+	this.battles = battles;
+	handleToBattleMapper = new HashMap<BattleHandle, Battle>();
 	handleToBattleMapper = new HashMap<BattleHandle, Battle>();
          // Disable log messages from Robocode
-         RobocodeEngine.setLogMessagesEnabled(false);
+        RobocodeEngine.setLogMessagesEnabled(debug);
          // Create the RobocodeEngine
          //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
-         RobocodeEngine engine = new RobocodeEngine(new java.io.File(ROBOCODE_DIR)); // Run from C:/Robocode
- 
+        engine = new RobocodeEngine(new java.io.File(ROBOCODE_DIR)); // Run from C:/Robocode
+
     }
 
     public void init(){
@@ -55,16 +57,11 @@ public class BattleRunner implements IBattleRunner {
 
     }
 
-    public BattleRunner(Queue<Battle> battles){
-	this.battles = battles;
-	handleToBattleMapper = new HashMap<BattleHandle, Battle>();
-    }
-
     @Override
     public void runNextBattle(){
-	if(battles.hasNext()){
+	if(!battles.isEmpty()){
 	    Battle b = battles.poll();
-	    handleToBattleMapper.put(BattleHandle.nextID(), b);
+	    handleToBattleMapper.put(new BattleHandle(), b);
 	    startBattle(b);
 	}
     }
@@ -72,16 +69,19 @@ public class BattleRunner implements IBattleRunner {
     public void startBattle(Battle b){
          int numberOfRounds = b.numberOfRounds;
          BattlefieldSpecification battlefield = b.getBattleFieldSpecs(); // 800x600
-         RobotSpecification[] selectedRobots = engine.getLocalRepository(b.getContestant1(), b.getContestant2());
+	 // Cache these values somewhere
+         RobotSpecification[] selectedRobots = engine.getLocalRepository(b.getContestant1() + "," + b.getContestant2());
 
          BattleSpecification battleSpec = new BattleSpecification(numberOfRounds, battlefield, selectedRobots);
  
          // Run our specified battle and let it run till it is over
+	 System.out.println("Running a battle: " + b);
          engine.runBattle(battleSpec, true); // waits till the battle finishes
 
     }
 
-    @Override GraphicsStream streamBattle(BattleHandle handle){
+    @Override
+    public GraphicsStream streamBattle(BattleHandle handle){
 	return handleToBattleMapper.get(handle).getGraphicsStream();
     }
 

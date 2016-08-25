@@ -2,7 +2,7 @@ import java.util.*;
 
 public interface IBattleRunner {
 
-    public void runBattles();
+    public void runNextBattle();
 
     public GraphicsStream streamBattle(BattleHandle handle);
 

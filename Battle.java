@@ -40,4 +40,9 @@ public class Battle {
 	return stream;
     }
 
+    @Override
+    public String toString(){
+	return "Battle between: " + contestant1 + " and " + contestant2;
+    }
+
 }
