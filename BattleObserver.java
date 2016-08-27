@@ -6,9 +6,6 @@ import net.sf.robocode.core.Container;
 import net.sf.robocode.repository.root.handlers.RootHandler;
 import net.sf.robocode.repository.IRepositoryManager;
  
- //
- // Our private battle listener for handling the battle event we are interested in.
- //
  class BattleObserver extends BattleAdaptor {
  
      // Called when the battle is completed successfully with battle results
