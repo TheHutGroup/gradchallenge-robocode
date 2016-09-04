@@ -14,14 +14,11 @@ public class BattleRunner implements IBattleRunner {
 
     Map<BattleHandle, Battle> handleToBattleMapper;
 
-    Queue<Battle> battles;
-
     RobocodeEngine engine;
 
     public static final String ROBOCODE_DIR = "C:/robocode";
 
-    public BattleRunner(Queue<Battle> battles, boolean debug){
-	this.battles = battles;
+    public BattleRunner(boolean debug){
 	handleToBattleMapper = new HashMap<BattleHandle, Battle>();
          // Disable log messages from Robocode
         RobocodeEngine.setLogMessagesEnabled(debug);
@@ -45,15 +42,13 @@ public class BattleRunner implements IBattleRunner {
     }
 
     @Override
-    public void runNextBattle(){
-	if(!battles.isEmpty()){
+    public String runBattle(Battle b){
 	    Battle b = battles.poll();
 	    handleToBattleMapper.put(new BattleHandle(), b);
-	    startBattle(b);
-	}
+	    return startBattle(b);
     }
 
-    public void startBattle(Battle b){
+    public String startBattle(Battle b){
          int numberOfRounds = b.numberOfRounds;
          BattlefieldSpecification battlefield = b.getBattleFieldSpecs(); // 800x600
 	 // Cache these values somewhere
@@ -64,6 +59,8 @@ public class BattleRunner implements IBattleRunner {
          // Run our specified battle and let it run till it is over
 	 System.out.println("Running a battle: " + b);
          engine.runBattle(battleSpec, true); // waits till the battle finishes
+	 // get the result of the battle
+	 return null;
 
     }
 

@@ -11,26 +11,24 @@ import java.util.*;
 public class Battle {
 
     int numberOfRounds;
-    String contestant1;
-    String contestant2;
+    public List<String> contestants;
     GraphicsStream stream;
     BattlefieldSpecification battleFieldSpecs;
 
-    public Battle(String c1, String c2, int numRounds){
-	contestant1 = c1;
-	contestant2 = c2;
+    public Battle(List<String> contestants, int numRounds){
+	this.contestants = contestants;
 	this.numberOfRounds = numRounds;
 	battleFieldSpecs = new BattlefieldSpecification(800, 600);
+	// TODO: Need to make this configurable
     }
 
-    public String getContestant1(){
-	return contestant1;
+    public Battle(int numRounds){
+	this.contestants = new LinkedList<String>();
+	this.numberOfRounds = numRounds;
+	battleFieldSpecs = new BattlefieldSpecification(800, 600);
+	// TODO: Need to make this configurable
     }
 
-    public String getContestant2(){
-	return contestant2;
-    }
-    
     public BattlefieldSpecification getBattleFieldSpecs(){
 	return battleFieldSpecs;
     }
@@ -40,9 +38,13 @@ public class Battle {
 	return stream;
     }
 
+    public void addBot(String bot){
+	contestants.add(bot);
+    }
+
     @Override
     public String toString(){
-	return "Battle between: " + contestant1 + " and " + contestant2;
+	return "Battle between: " + contestants;
     }
 
 }

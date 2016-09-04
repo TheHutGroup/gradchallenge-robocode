@@ -1,5 +1,23 @@
-* Visit http://robocode.sourceforge.net/
-* Download the Robocode API
-* Simple Strategy for the training bot
-* Go through the robocode menu from the application as well
-
+* Goal
+.. Given a bunch of 'x' jars
+.. Load all the jars from the repository
+. , Add error handling, if the number of repoitories you get is not the number that you're expecting
+.. Split the jars into groups
+. , Maximum, 15 groups, Minimum 2 groups
+. , Minimum 5 players per group, Maximum 10 players per group
+. , 150 people maximum, 10 people minimum
+. , For each value 'g' between 2..15, if 5 <= x/g <= 10 then choose 'g' groups
+. , Allocate the jars sequentially into the groups,
+.  . Distribute x`mod` g, among the existing groups
+.. For each group:
+. , Create a battle with all the elements of the group
+. , Print the battle information
+.  . Show a screen with all of the people competing in the battle
+. , Start the battle
+. , Create an entry in a logger keeping the results for each bot
+. , Add the winner to a list
+.. Once all the groups have been created
+. , Create a new battle with the winner
+. , Run the battle
+. , Create a victory screen with the winners name
+.. Figure out how to log to the database
