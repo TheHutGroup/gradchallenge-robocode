@@ -21,7 +21,7 @@ public class Utils
     }
 
     private static RobotSpecification[] toArray(List<RobotSpecification> inp){
-	throw new RuntimeException("Unimplemented");
+	return (RobotSpecification[])(inp.toArray());
     }
 
 
@@ -94,7 +94,20 @@ public class Utils
 						   
 
     public static RobotSpecification extractWinner(BattleResults[] results, RobotSpecification[] spec){
-	throw new RuntimeException("Unimplemented");
+	RobotSpecification winner = null;
+	int maxScore = 0;
+	for(int i = 0; i < spec.length; i++){
+	    if(maxScore < Utils.score(results[i])){
+		winner = spec[i];
+		maxScore = Utils.score(results[i]);
+	    }
+	}
+
+	return winner;
+    }
+
+    public static int score(BattleResults result){
+	throw new RuntimeException("TODO");
     }
 
 

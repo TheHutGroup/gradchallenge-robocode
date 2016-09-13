@@ -33,6 +33,7 @@ public class THGEngine extends RobocodeEngine {
 
 	public void onBattleCompleted(BattleCompletedEvent e) {
 	    results = e.getIndexedResults();
+	    notifyAll();
 	}
 	
 	public BattleResults[] getResult(){
