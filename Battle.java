@@ -12,11 +12,14 @@ public class Battle
 	this.competitors = competitors;
 	spec = new BattlefieldSpecification(width, height);
 	bSpec = new BattleSpecification(numRounds, spec, competitors);
-	engine.setVisible(true);
 
     }
 
-    public BattleSpecification getBattleSpec(){
+    public RobotSpecification[] getCompetitors(){
+	return competitors;
+    }
+
+    public BattleSpecification getBattleSpecification(){
 	return bSpec;
     }
 

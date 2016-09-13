@@ -1,5 +1,7 @@
+import robocode.BattleResults;
 import java.util.*;
-import robocode.control.RobotSpecification;
+import robocode.control.*;
+import robocode.control.events.*;
 
 public class Utils
 {

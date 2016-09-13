@@ -18,7 +18,7 @@ public class Main
 
 	engine.displayBattleScreen(winners);
 
-	Battle             finalBattle = Utils.toBattle(Utils.toArray(winners), width, height, numRounds);
+	Battle             finalBattle = Utils.toBattle(winners, width, height, numRounds);
         RobotSpecification champion    = engine.runBattle(finalBattle);
 
 	engine.displayWinner(champion);

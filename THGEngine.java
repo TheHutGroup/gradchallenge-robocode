@@ -1,17 +1,21 @@
+import robocode.BattleResults;
 import java.util.*;
-import robocode.control.RobotSpecification;
-import robocode.control.RobocodeEngine;
+import robocode.control.*;
+import robocode.control.events.*;
 
 public class THGEngine extends RobocodeEngine {
+    SimpleListener listener;
 
-    public RobocodeEngine(){
-	engine.setVisible(true);
-	addListener(new SimpleListener());
+
+    public THGEngine(){
+	setVisible(true);
+	listener = new SimpleListener();	
+	addBattleListener(listener);
     }
     
     public RobotSpecification runBattle(Battle b){
-	runBattle(specification, false);
-	listener.wait();
+	runBattle(b.getBattleSpecification(), false);
+	try { listener.wait(); } catch (Exception e) { throw new RuntimeException("Crash"); }
 	return Utils.extractWinner(listener.getResult(), b.getCompetitors());
     }
 
@@ -31,7 +35,7 @@ public class THGEngine extends RobocodeEngine {
 	    results = e.getIndexedResults();
 	}
 	
-	public getResult(){
+	public BattleResults[] getResult(){
 	    return results;
 	}	    
     }
