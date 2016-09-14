@@ -93,21 +93,36 @@ public class Utils
     }
 						   
 
-    public static RobotSpecification extractWinner(BattleResults[] results, RobotSpecification[] spec){
+    public static RobotSpecification extractWinner(List<List<RoundResult>> results, CumulativeRoundResult cumResult, RobotSpecification[] spec){
 	RobotSpecification winner = null;
-	int maxScore = 0;
+	double maxScore = 0;
 	for(int i = 0; i < spec.length; i++){
-	    if(maxScore < Utils.score(results[i])){
+	    if(maxScore < Utils.score(results.get(i), cumResult)){
 		winner = spec[i];
-		maxScore = Utils.score(results[i]);
+		maxScore = Utils.score(results.get(i), cumResult);
 	    }
 	}
 
 	return winner;
     }
 
-    public static int score(BattleResults result){
-	throw new RuntimeException("TODO");
+    private static double S(RoundResult round, CumulativeRoundResult cumResult){
+	return round.getGunDamage()/cumResult.getGunDamage() + round.getRamDamage()/cumResult.getRamDamage()*1.5 + round.getEnergyLeft()/cumResult.getEnergyLeft() + (round.winner() ? 1 : 0);
+    }
+
+    public static double score(List<RoundResult> rounds, CumulativeRoundResult cumResult){
+	double matchScore = 0;
+
+	for(int i = 1; i <= rounds.size(); i++){
+	    matchScore += 2.1 * 10e-4 *i * S(rounds.get(i), cumResult);
+	}
+
+	for(int k = rounds.size()-3; k < rounds.size(); k++){
+	    matchScore += S(rounds.get(k), cumResult);
+	}
+
+	return matchScore;
+
     }
 
 

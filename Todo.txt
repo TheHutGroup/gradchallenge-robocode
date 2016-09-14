@@ -22,22 +22,25 @@
 . , Create a victory screen with the winners name
 .. Figure out how to log to the database
 * Solution:
-.. Implement the functions
-. , mapToSpecs
-. , bracket
-.  . Take parameters for min, max {groups/players}
-. , mapToBattle
-. , toBattle
-.. Add the import of the specific robocode package
-.. Given 'x' jars
-.. Map the jars to robot specifications
-.. Split the specs into groups
-.. Map each group to a battle
-.. Run all the battles and collect the winners
-. , Submit them to a robocode engine
-. , Attach a listener to the robocode engine
-. , The listener populates a map from battle number to battle results
-. , Take the battle results and calculate the winner from it.
+.. Implement the scoring function
+. , Create a new listener,
+.  . Listens to every turn
+.   , Updates the score snapshot
+.   , When the round is over it appends the score snapshot somewhere
+.   , When the battle is over, it takes the score information from all of the rounds and calculates the score from them
+. , Find vlads email
+. , Implement the scoring function as described therein
+.. Augment robotspecification with player id
+. , check the robotspecification class to see if it has an id
+. , If not, create your own Player class that extends it with an id.
+.. In the runBattle function log to the database
+. , Create a database
+.  . Open up the mysql console 
+.  . Create a table Player
+.   , Player id, name, class name, other details in robot specification
+.  . Create a table Battle
+.   , Player id, battle id, battle stats of that player - see what components you have inside 'RobotResults'
+. , Create a test class that connects to the database
 .. Display a screen consisting of the winner information
 .. Create a battle of the winners
 .. Run a battle of the winners
