@@ -94,49 +94,87 @@ public class Utils
 	return result;
     }
 						   
+    public static List<CumulativeRoundResult> roundResultToCumulativeResult(List<List<RoundResult>> roundResults){
+	List<CumulativeRoundResult> res = new ArrayList<CumulativeRoundResult>();
+	for(List<RoundResult> round : roundResults){
+	    res.add(toCumulativeResult(round));
+	}
+	return res;
+    }
+
     private static CumulativeRoundResult toCumulativeResult(List<RoundResult> roundResults){
 	double totalEnergyLeft = 0;
 	double totalRamDamage  = 0;
 	double totalGunDamage  = 0;
 
-
-
 	for(RoundResult r : roundResults){
 	    totalEnergyLeft += r.energyLeft;
 	    totalRamDamage  += r.ramDamage;
 	    totalGunDamage  += r.gunDamage;
+	    
 	}
 
 	return new CumulativeRoundResult(totalEnergyLeft, totalRamDamage, totalGunDamage);
     }
 
 
-    public static RobotSpecification extractWinner(List<List<RoundResult>> results, RobotSpecification[] spec){
-	RobotSpecification winner = null;
-	double maxScore = 0;
-	for(int i = 0; i < spec.length; i++){
-	    if(maxScore < Utils.score(results.get(i), toCumulativeResult(results.get(i)))){
-		winner = spec[i];
-		maxScore = Utils.score(results.get(i), toCumulativeResult(results.get(i)));
+    private static Tuple<Integer, Double> maxPlayerScorePair(List<Tuple<Integer, Double>> tuples){
+
+	Tuple<Integer, Double> tuplePair = tuples.get(0);
+
+	for(Tuple<Integer, Double> t : tuples){
+	    if(t.snd() > tuplePair.snd()){
+		t = tuplePair;
 	    }
 	}
 
-	return winner;
+	return tuplePair;
+	
+    }
+
+    public static RobotSpecification extractWinner(List<Tuple<Integer, Double>> results, RobotSpecification[] spec){
+	//  a list of results 
+	
+	return spec[maxPlayerScorePair(results).fst()];
     }
 
     private static double S(RoundResult round, CumulativeRoundResult cumResult){
 	return round.getGunDamage()/cumResult.getGunDamage() + round.getRamDamage()/cumResult.getRamDamage()*1.5 + round.getEnergyLeft()/cumResult.getEnergyLeft();
     }
 
-    public static double score(List<RoundResult> rounds, CumulativeRoundResult cumResult){
+    private static Map<Integer, List<RoundResult>> splitIntoRoundResultsPerBot(List<List<RoundResult>> res){
+
+	Map<Integer, List<RoundResult>> mp = new HashMap<Integer, List<RoundResult>>();
+
+	for(List<RoundResult> lrr : res){
+	    for(RoundResult rr : lrr){
+		if(mp.get(rr.playerId) == null){
+		    mp.put(rr.playerId, new LinkedList<RoundResult>());
+		}
+		mp.get(rr.playerId).add(rr);
+	    }
+	}
+	return mp;
+    }
+
+    public static List<Tuple<Integer, Double>> score(List<List<RoundResult>> roundResults, List<CumulativeRoundResult> cumRes){
+	List<Tuple<Integer, Double>> result = new ArrayList<Tuple<Integer, Double>>();
+	Map<Integer, List<RoundResult>> mp = splitIntoRoundResultsPerBot(roundResults);
+	for(int key : mp.keySet()){
+	    result.add(new Tuple<Integer, Double>(key, scoreOne(mp.get(key), cumRes)));
+	}
+	return result;
+    }
+
+    public static double scoreOne(List<RoundResult> rounds, List<CumulativeRoundResult> cumResult){
 	double matchScore = 0;
 
 	for(int i = 1; i <= rounds.size(); i++){
-	    matchScore += 2.1 * 10e-4 *i * S(rounds.get(i), cumResult);
+	    matchScore += 2.1 * 10e-4 *i * S(rounds.get(i), cumResult.get(i));
 	}
 
 	for(int k = rounds.size()-3; k < rounds.size(); k++){
-	    matchScore += S(rounds.get(k), cumResult);
+	    matchScore += S(rounds.get(k), cumResult.get(k));
 	}
 
 	return matchScore;

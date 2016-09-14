@@ -6,6 +6,7 @@ import robocode.control.snapshot.*;
 import robocode.control.events.*;
 
 public class THGEngine extends RobocodeEngine {
+    private static final int ACCURACY = 1000000;
     SimpleListener listener;
     Connection conn;
     boolean logToDB;
@@ -15,10 +16,10 @@ public class THGEngine extends RobocodeEngine {
 	addBattleListener(listener);
 	try {
 	    conn = DriverManager.getConnection(connString, user, password);
-	    logToDb = true;
+	    logToDB = true;
 	}
 	catch(Exception e){
-	    logToDb = false;
+	    logToDB = false;
 	}
     }
     
@@ -28,19 +29,19 @@ public class THGEngine extends RobocodeEngine {
 	try { listener.wait(); } catch (Exception e) { throw new RuntimeException("Crash"); }
 
 	List<List<RoundResult>> roundResults = listener.getRoundResults();
-	List<Tuple<Integer, Integer>> scores = Utils.score(roundResults, b.getCompetitors());
+	List<Tuple<Integer, Double>> scores = Utils.score(roundResults, Utils.roundResultToCumulativeResult(roundResults));
 
-	if(logToDb){
+	if(logToDB){
 	    executeStatements(toBattleInfoStatements(b.battleId, scores));
 	    executeStatements(toRoundInfoStatements(b.battleId, roundResults));
 	}
 	
-	return Utils.extractWinner(roundResults, b.getCompetitors());
+	return null; // TODO: Implement this - Utils.extractWinner(roundResults, b.getCompetitors());
 
     
     }
 
-    private String toRoundInfoStatement(int battleId, RoundResult result){x
+    private String toRoundInfoStatement(int battleId, RoundResult result){
 	    return String.format("insert into roundinfo (battleid, roundid, playerid, energyLeft, ramDamage, gunDamage) values (%d, %d, %d, %d, %d, %d)", battleId, result.roundId, result.playerId, result.energyLeft, result.ramDamage, result.gunDamage);
     }
 
@@ -49,8 +50,8 @@ public class THGEngine extends RobocodeEngine {
 	List<String> result = new ArrayList<String>();
 
 	for(List<RoundResult> roundResult : roundResults){
-	    for(RoundResult result : roundResult){
-		result.add(toRoundInfoStatement(battleId, result));
+	    for(RoundResult rResult : roundResult){
+		result.add(toRoundInfoStatement(battleId, rResult));
 	    }
 	}
 	return result;
@@ -61,10 +62,10 @@ public class THGEngine extends RobocodeEngine {
 	return String.format("insert into battleinfo (battleid, playerid, rank) values (%d, %d, %d)", battleId, playerId, playerRank);
     }
 
-    private List<String> toBattleInfoStatements(int battleId, List<Tuple<Integer, Integer>> scores){
-	scores.sort(scores, new Comparator<Tuple<Integer, Integer>>(){
-		public int compareTo(Tuple<Integer, Integer> t1, Tuple<Integer, Integer> t2){
-		    return t2.snd() - t1.snd();
+    private List<String> toBattleInfoStatements(int battleId, List<Tuple<Integer, Double>> scores){
+	Collections.sort(scores, new Comparator<Tuple<Integer, Double>>(){
+		public int compare(Tuple<Integer, Double> t1, Tuple<Integer, Double> t2){
+		    return (int)((t2.snd() - t1.snd())*ACCURACY);
 		}
 	    });
 	List<String> result = new LinkedList<String>();
