@@ -6,10 +6,12 @@ import robocode.control.snapshot.*;
 import robocode.control.events.*;
 
 public class THGEngine extends RobocodeEngine {
+
     private static final int ACCURACY = 1000000;
     SimpleListener listener;
     Connection conn;
     boolean logToDB;
+
     public THGEngine(String connString, String user, String password){
 	setVisible(true);
 	listener = new SimpleListener();	
