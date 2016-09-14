@@ -1,6 +1,7 @@
 import robocode.BattleResults;
 import java.util.*;
 import robocode.control.*;
+import robocode.control.snapshot.*;
 import robocode.control.events.*;
 
 public class THGEngine extends RobocodeEngine {
@@ -30,24 +31,48 @@ public class THGEngine extends RobocodeEngine {
 
     private class SimpleListener extends BattleAdaptor {
 
+	List<List<IRobotSnapshot>> roundResults;
+	List<IRobotSnapshot> newRoundResult;
+	
+
 	@Override
 	public void onTurnEnded(final TurnEndedEvent event){
-	    throw new RuntimeException("TODO");
+	    newRoundResult = Arrays.asList(event.getTurnSnapshot().getRobots());
 	}
 
 	@Override
 	public void onRoundEnded(final RoundEndedEvent event){
-	    throw new RuntimeException("TODO");
+	    roundResults.add(newRoundResult);
 	}
 
 	@Override
 	public void onBattleCompleted(BattleCompletedEvent e) {
-	    throw new RuntimeException("TODO");
+	    notifyAll();
 	}
 	
 	public List<List<RoundResult>> getRoundResults(){
-	    throw new RuntimeException("TODO");
+	    List<List<RoundResult>> result = new ArrayList<List<RoundResult>>();
+	    for(int i = 0; i < roundResults.size(); i++){
+		List<RoundResult> newElem = new ArrayList<RoundResult>();
+		for(IRobotSnapshot snapshot : roundResults.get(i)) {
+		    newElem.add(toRoundResult(snapshot));
+		}
+		result.add(newElem);
+	    }
+	    return result;
 	}
+
+	private RoundResult toRoundResult(IRobotSnapshot robotSnapshot){
+	    
+	    double energyLeft = robotSnapshot.getEnergy();
+	    
+	    IScoreSnapshot snapshot = robotSnapshot.getScoreSnapshot();
+	    double gunDamage = snapshot.getCurrentBulletDamageScore() + snapshot.getCurrentBulletKillBonus();
+	    double ramDamage = snapshot.getCurrentRammingDamageScore() + snapshot.getCurrentRammingKillBonus();
+	    return new RoundResult(energyLeft, ramDamage, gunDamage);
+
+	}
+
 
     }
 

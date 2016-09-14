@@ -1,20 +1,26 @@
 public class RoundResult {
 
+    double energyLeft;
+    double ramDamage;
+    double gunDamage;
 
-    public boolean winner(){
-	throw new RuntimeException("TODO");
+    public RoundResult(double energyLeft, double ramDamage, double gunDamage){
+	this.energyLeft = energyLeft;
+	this.ramDamage = ramDamage;
+	this.gunDamage = gunDamage;
     }
+    
 
     public double getEnergyLeft(){
-	throw new RuntimeException("TODO");	
+	return energyLeft;
     }
 
     public double getRamDamage(){
-	throw new RuntimeException("TODO");
+	return ramDamage;
     }
 
     public double getGunDamage(){
-	throw new RuntimeException("TODO");
+	return gunDamage;
     }
        
 

@@ -40,6 +40,7 @@
 . , getRoundResults:
 .  . convert the (IScoreSnapshot) to a RoundResult
 . , getCumulativeResult
+.  . For cumulativeResults 
 .. Augment robotspecification with player id
 . , check the robotspecification class to see if it has an id
 . , If not, create your own Player class that extends it with an id.

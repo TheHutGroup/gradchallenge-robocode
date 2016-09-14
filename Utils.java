@@ -92,8 +92,20 @@ public class Utils
 	return result;
     }
 						   
-    private static CumulativeRoundResult toCumulativeResult(List<RoundResult> r){
-	throw new RuntimeException("TODO");
+    private static CumulativeRoundResult toCumulativeResult(List<RoundResult> roundResults){
+	double totalEnergyLeft = 0;
+	double totalRamDamage  = 0;
+	double totalGunDamage  = 0;
+
+
+
+	for(RoundResult r : roundResults){
+	    totalEnergyLeft += r.energyLeft;
+	    totalRamDamage  += r.ramDamage;
+	    totalGunDamage  += r.gunDamage;
+	}
+
+	return new CumulativeRoundResult(totalEnergyLeft, totalRamDamage, totalGunDamage);
     }
 
 
@@ -111,7 +123,7 @@ public class Utils
     }
 
     private static double S(RoundResult round, CumulativeRoundResult cumResult){
-	return round.getGunDamage()/cumResult.getGunDamage() + round.getRamDamage()/cumResult.getRamDamage()*1.5 + round.getEnergyLeft()/cumResult.getEnergyLeft() + (round.winner() ? 1 : 0);
+	return round.getGunDamage()/cumResult.getGunDamage() + round.getRamDamage()/cumResult.getRamDamage()*1.5 + round.getEnergyLeft()/cumResult.getEnergyLeft();
     }
 
     public static double score(List<RoundResult> rounds, CumulativeRoundResult cumResult){
