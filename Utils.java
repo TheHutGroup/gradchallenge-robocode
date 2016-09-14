@@ -13,9 +13,11 @@ public class Utils
 
     public static List<Battle> mapToBattle(List<List<RobotSpecification>> brackets, int width, int height, int numRounds){
 	List<Battle> result = new ArrayList<Battle>();
+	int battleId = 0;
 	for(List<RobotSpecification> bracket : brackets)
 	{
-	    result.add(toBattle(bracket, width, height, numRounds));
+	    result.add(toBattle(battleId, bracket, width, height, numRounds));
+	    battleId++;
 	}
 	return result;
     }
@@ -25,9 +27,9 @@ public class Utils
     }
 
 
-    public static Battle toBattle(List<RobotSpecification> spec, int width, int height, int numRounds){
+    public static Battle toBattle(int battleId, List<RobotSpecification> spec, int width, int height, int numRounds){
 	
-	return new Battle(toArray(spec), width, height, numRounds);
+	return new Battle(battleId, toArray(spec), width, height, numRounds);
     }
 						   
     private static Tuple<Integer, Integer> determineGroupInfo(int numCompetitors, int groupMaxBound, int groupMinBound, int minGroupSize, int maxGroupSize)

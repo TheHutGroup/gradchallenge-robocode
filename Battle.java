@@ -7,8 +7,10 @@ public class Battle
     RobotSpecification[] competitors;
     BattlefieldSpecification spec;
     BattleSpecification bSpec;
+    int battleId;
 
-    public Battle(RobotSpecification[] competitors, int width, int height, int numRounds){
+    public Battle(int battleId, RobotSpecification[] competitors, int width, int height, int numRounds){
+	this.battleId = battleId;
 	this.competitors = competitors;
 	spec = new BattlefieldSpecification(width, height);
 	bSpec = new BattleSpecification(numRounds, spec, competitors);

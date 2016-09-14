@@ -22,6 +22,33 @@
 . , Create a victory screen with the winners name
 .. Figure out how to log to the database
 * Solution:
+.. Augment robotspecification with player id
+. , check the robotspecification class to see if it has an id
+. , If not, create your own Player class that extends it with an id.
+.. In the runBattle function log to the database
+. , Create a database
+.  . Open up the mysql console 
+.  . Create a table Player
+.   , Player id, name, class name, other details in robot specification
+.  . Create a table Battle
+.   , Player id, battle id, battle stats of that player - see what components you have inside 'RobotResults'
+. , Create a test class that connects to the database
+. , Give every battle an id
+.  . Initialize the battle
+. , Give the round results the player id (team id)
+. , Look at the schema for the database
+.  . Everytime you run a battle and get the results update all of the databases
+.   , battle info
+.    . battleid
+.    . playerid
+.    . rank
+.   , roundinfo
+.    . battleid
+.    . roundid
+.    . playerid
+.    . energyleft
+.    . ramDamage
+.    . gunDamage
 .. Implement the scoring function
 . , Create a new listener,
 .  . Listens to every turn
@@ -41,20 +68,15 @@
 .  . convert the (IScoreSnapshot) to a RoundResult
 . , getCumulativeResult
 .  . For cumulativeResults 
-.. Augment robotspecification with player id
-. , check the robotspecification class to see if it has an id
-. , If not, create your own Player class that extends it with an id.
-.. In the runBattle function log to the database
-. , Create a database
-.  . Open up the mysql console 
-.  . Create a table Player
-.   , Player id, name, class name, other details in robot specification
-.  . Create a table Battle
-.   , Player id, battle id, battle stats of that player - see what components you have inside 'RobotResults'
-. , Create a test class that connects to the database
-.. Display a screen consisting of the winner information
-.. Create a battle of the winners
-.. Run a battle of the winners
+.. Check that the team names of jars are distinct
+. , Once you load the jars, check that all the team ids are distinct
+.  . If they aren't then quit with an error saying that team names are not distinct
+.  . Tell David that the team names have to be distinct.
+.. Test everything
+. , Unit test stuff, you tend to make really stupid mistakes very often
 .. Display the winner on the screen
 . , Get the battle results of the latest battle id, extract the winner from there
 .. put everything in the com.thg namespace, or whatever namespace they want it in
+
+.. Compilation Instruction:
+. , java -cp ".;../../../Downloads/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar" DBConnect
