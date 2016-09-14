@@ -30,6 +30,16 @@
 .   , When the battle is over, it takes the score information from all of the rounds and calculates the score from them
 . , Find vlads email
 . , Implement the scoring function as described therein
+. , List<List<RoundResult>>
+.  . For each round we add a List<RoundResult>
+.   , For each robot, there is a round result
+. , On Round Ended
+.  . Add the current List<IScoreSnapshot> to the list of roundResults
+. , On Turn Ended
+.  . Update the List<IScoreSnapshot> with the latest IScoreSnapshots
+. , getRoundResults:
+.  . convert the (IScoreSnapshot) to a RoundResult
+. , getCumulativeResult
 .. Augment robotspecification with player id
 . , check the robotspecification class to see if it has an id
 . , If not, create your own Player class that extends it with an id.

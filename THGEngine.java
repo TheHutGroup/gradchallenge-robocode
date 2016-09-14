@@ -16,7 +16,7 @@ public class THGEngine extends RobocodeEngine {
     public RobotSpecification runBattle(Battle b){
 	runBattle(b.getBattleSpecification(), false);
 	try { listener.wait(); } catch (Exception e) { throw new RuntimeException("Crash"); }
-	return Utils.extractWinner(listener.getRoundResults(), listener.getCumulativeResult(), b.getCompetitors());
+	return Utils.extractWinner(listener.getRoundResults(), b.getCompetitors());
     }
 
     public void displayBattleScreen(List<RobotSpecification> winners){
@@ -29,20 +29,26 @@ public class THGEngine extends RobocodeEngine {
 
 
     private class SimpleListener extends BattleAdaptor {
-	BattleResults[] results;
 
+	@Override
+	public void onTurnEnded(final TurnEndedEvent event){
+	    throw new RuntimeException("TODO");
+	}
+
+	@Override
+	public void onRoundEnded(final RoundEndedEvent event){
+	    throw new RuntimeException("TODO");
+	}
+
+	@Override
 	public void onBattleCompleted(BattleCompletedEvent e) {
-	    results = e.getIndexedResults();
-	    notifyAll();
+	    throw new RuntimeException("TODO");
 	}
 	
 	public List<List<RoundResult>> getRoundResults(){
 	    throw new RuntimeException("TODO");
 	}
 
-	public CumulativeRoundResult getCumulativeResult(){
-	    throw new RuntimeException("TODO");
-	}
     }
 
 }

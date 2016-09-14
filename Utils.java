@@ -92,14 +92,18 @@ public class Utils
 	return result;
     }
 						   
+    private static CumulativeRoundResult toCumulativeResult(List<RoundResult> r){
+	throw new RuntimeException("TODO");
+    }
 
-    public static RobotSpecification extractWinner(List<List<RoundResult>> results, CumulativeRoundResult cumResult, RobotSpecification[] spec){
+
+    public static RobotSpecification extractWinner(List<List<RoundResult>> results, RobotSpecification[] spec){
 	RobotSpecification winner = null;
 	double maxScore = 0;
 	for(int i = 0; i < spec.length; i++){
-	    if(maxScore < Utils.score(results.get(i), cumResult)){
+	    if(maxScore < Utils.score(results.get(i), toCumulativeResult(results.get(i)))){
 		winner = spec[i];
-		maxScore = Utils.score(results.get(i), cumResult);
+		maxScore = Utils.score(results.get(i), toCumulativeResult(results.get(i)));
 	    }
 	}
 
