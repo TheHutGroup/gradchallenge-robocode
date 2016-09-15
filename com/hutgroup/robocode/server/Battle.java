@@ -1,3 +1,5 @@
+package com.hutgroup.robocode.server;
+
 import java.util.List;
 import robocode.control.*;
 
@@ -7,7 +9,7 @@ public class Battle
     RobotSpecification[] competitors;
     BattlefieldSpecification spec;
     BattleSpecification bSpec;
-    int battleId;
+    public int battleId;
 
     public Battle(int battleId, RobotSpecification[] competitors, int width, int height, int numRounds){
 	this.battleId = battleId;

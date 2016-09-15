@@ -1,0 +1,9 @@
+task print4times {
+  action { println "WOWOWOWOWO" }
+  
+}
+
+
+print4times.doFirst {
+  println "Start"		    
+}

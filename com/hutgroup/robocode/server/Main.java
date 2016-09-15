@@ -1,3 +1,5 @@
+package com.hutgroup.robocode.server;
+
 import java.util.*;
 import robocode.control.RobotSpecification;
 import robocode.control.RobocodeEngine;

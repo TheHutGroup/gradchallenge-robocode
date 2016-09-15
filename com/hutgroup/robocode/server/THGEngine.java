@@ -1,3 +1,6 @@
+package com.hutgroup.robocode.server;
+
+import com.hutgroup.robocode.utils.Tuple;
 import robocode.BattleResults;
 import java.sql.*;
 import java.util.*;
@@ -38,7 +41,7 @@ public class THGEngine extends RobocodeEngine {
 	    executeStatements(toRoundInfoStatements(b.battleId, roundResults));
 	}
 	
-	return null; // TODO: Implement this - Utils.extractWinner(roundResults, b.getCompetitors());
+	throw new RuntimeException("TODO: Implement this - Utils.extractWinner(roundResults, b.getCompetitors());");
 
     
     }

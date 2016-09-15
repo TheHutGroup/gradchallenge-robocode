@@ -1,3 +1,6 @@
+package com.hutgroup.robocode.server;
+
+import com.hutgroup.robocode.utils.Tuple;
 import robocode.BattleResults;
 import java.util.*;
 import robocode.control.*;
@@ -28,11 +31,10 @@ public class Utils
 
 
     public static Battle toBattle(int battleId, List<RobotSpecification> spec, int width, int height, int numRounds){
-	
 	return new Battle(battleId, toArray(spec), width, height, numRounds);
     }
 						   
-    private static Tuple<Integer, Integer> determineGroupInfo(int numCompetitors, int groupMaxBound, int groupMinBound, int minGroupSize, int maxGroupSize)
+    public static Tuple<Integer, Integer> determineGroupInfo(int numCompetitors, int groupMaxBound, int groupMinBound, int minGroupSize, int maxGroupSize)
     {
 
 	int minGSize = 0;
@@ -142,7 +144,7 @@ public class Utils
 	return round.getGunDamage()/cumResult.getGunDamage() + round.getRamDamage()/cumResult.getRamDamage()*1.5 + round.getEnergyLeft()/cumResult.getEnergyLeft();
     }
 
-    private static Map<Integer, List<RoundResult>> splitIntoRoundResultsPerBot(List<List<RoundResult>> res){
+    public static Map<Integer, List<RoundResult>> splitIntoRoundResultsPerBot(List<List<RoundResult>> res){
 
 	Map<Integer, List<RoundResult>> mp = new HashMap<Integer, List<RoundResult>>();
 

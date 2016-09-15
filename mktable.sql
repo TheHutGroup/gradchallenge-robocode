@@ -5,3 +5,4 @@ create table player (playerid int, author varchar(30), version varchar(10), jarF
 create table roundinfo (battleid int, roundid int, playerid int, energyLeft int, ramDamage int, gunDamage int);
 
 create table battleinfo (battleid int, playerid int, rank int);
+

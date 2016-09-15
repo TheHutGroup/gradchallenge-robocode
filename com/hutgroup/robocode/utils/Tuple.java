@@ -1,3 +1,5 @@
+package com.hutgroup.robocode.utils;
+
 public class Tuple<X, Y>{
     private X fst;
     private Y snd;
