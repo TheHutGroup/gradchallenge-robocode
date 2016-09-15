@@ -3,22 +3,77 @@ package com.hutgroup.robocode.test;
 import java.util.*;
 import com.hutgroup.robocode.utils.*;
 import com.hutgroup.robocode.server.*;
+import robocode.control.RobotSpecification;
 import robocode.control.*;
 
 public class UtilTest {
 
 
-    public static RobotSpecification[] initCompetitors(){
-	throw new RuntimeException("TODO");
+    public static void main(String []args){
+
+	int numCompetitors = 10;
+	int numRounds = 100;
+
+	if(args.length == 2)
+	{
+	    numRounds = Integer.parseInt(args[0]);
+	    numCompetitors = Integer.parseInt(args[1]);
+	}
+
+	runTests(numRounds, numCompetitors);
+
     }
 
-    public static List<List<RoundResult>> initRoundResults(){
-	throw new RuntimeException("TODO");
+    private static RobotSpecification roboSpec(int i){
+	String id = i + "";
+	return RobotSpecificationTest.createRobotSpecification(null,
+							   id,
+							   id,
+							   "",
+							   "",
+							   "",
+							   "josh.jar",
+							   "josh.Corners",
+							   "");
     }
 
-    public static void main(String []args)
+    
+
+    public static RobotSpecification[] initCompetitors(int n){
+	RobotSpecification [] rs = new RobotSpecification[n];
+	for(int i = 0; i < n; i++){
+	    rs[i] = roboSpec(i);
+	}
+	return rs;
+    }
+
+    private static RoundResult robotResult(int round, int robot){
+	double e = Math.random()*100;
+	double r = Math.random()*100;
+	double g = Math.random()*100;
+	return new RoundResult(round, robot, e, r, g);
+    }
+
+    public static List<List<RoundResult>> initRoundResults(int rounds, int numRobots){
+
+	List<List<RoundResult>> result = new LinkedList<List<RoundResult>>();
+
+	for(int round = 0; round < rounds; round++){
+	    List<RoundResult> newRound = new ArrayList<RoundResult>();
+
+	    for(int robot = 0; robot < numRobots; robot++){
+		newRound.add(robotResult(round, robot));
+	    }
+	    result.add(newRound);
+	}
+
+	return result;
+
+    }
+
+    public static void runTests(int rounds, int numCompetitors)
     {
-	RobotSpecification[] competitors = initCompetitors();
+	RobotSpecification[] competitors = initCompetitors(numCompetitors);
 	
 	testBracket(competitors, 10, 2, 5, 20);
 	System.out.println("testBracket passes");
@@ -36,7 +91,7 @@ public class UtilTest {
 	System.out.println("testMapToBattle passes");
 
 
-	List<List<RoundResult>> roundResults = initRoundResults();
+	List<List<RoundResult>> roundResults = initRoundResults(rounds, numCompetitors);
 	testRoundResultToCumulativeResult(roundResults);
 
     }

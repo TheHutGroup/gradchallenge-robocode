@@ -16,7 +16,6 @@ public class Battle
 	this.competitors = competitors;
 	spec = new BattlefieldSpecification(width, height);
 	bSpec = new BattleSpecification(numRounds, spec, competitors);
-
     }
 
     public RobotSpecification[] getCompetitors(){
