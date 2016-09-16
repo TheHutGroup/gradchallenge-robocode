@@ -102,8 +102,8 @@ public class UtilTest {
 	List<Battle> battles = Utils.mapToBattle(brackets, width, height, numRounds);
 	Set<Integer> battleIds = new HashSet<Integer>();
 	for(Battle b : battles){
-	    assert(!battleIds.contains(b.battleId));
-	    battleIds.add(b.battleId);
+	    assert(!battleIds.contains(b.getBattleId()));
+	    battleIds.add(b.getBattleId());
 	}
     }
 
@@ -191,7 +191,7 @@ public class UtilTest {
 
 	for(int robot : result.keySet()){
 	    for(RoundResult rr : result.get(robot)){
-		assert(rr.playerId == robot);
+		assert(rr.getPlayerId() == robot);
 	    }
 	}
 
