@@ -6,24 +6,24 @@ import robocode.control.*;
 
 public class Battle
 {
-    RobotSpecification[] competitors;
+    /**
+     * Wrapper around a battle information.
+     */
+
+    RobotSpecification[]     competitors;
     BattlefieldSpecification spec;
-    BattleSpecification bSpec;
-    public int battleId;
+    BattleSpecification      bSpec;
+    int                      battleId;
 
     public Battle(int battleId, RobotSpecification[] competitors, int width, int height, int numRounds){
-	this.battleId = battleId;
+	this.battleId    = battleId;
 	this.competitors = competitors;
-	spec = new BattlefieldSpecification(width, height);
-	bSpec = new BattleSpecification(numRounds, spec, competitors);
+	this.spec        = new BattlefieldSpecification(width, height);
+	this.bSpec       = new BattleSpecification(numRounds, spec, competitors);
     }
 
-    public RobotSpecification[] getCompetitors(){
-	return competitors;
-    }
-
-    public BattleSpecification getBattleSpecification(){
-	return bSpec;
-    }
+    public int                  getBattleId()            { return battleId;    }
+    public RobotSpecification[] getCompetitors()         { return competitors; }
+    public BattleSpecification  getBattleSpecification() { return bSpec;       }
 
 }
