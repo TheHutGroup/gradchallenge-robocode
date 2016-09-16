@@ -51,10 +51,6 @@ public class THGEngine extends RobocodeEngine
 
 	runBattle(b.getBattleSpecification(), false);
 
-	synchronized (listener) {
-	    try { listener.wait(); } catch (Exception e) { throw new RuntimeException(e.toString()); }
-	}
-
 	List<List<RoundResult>>      roundResults = listener.getRoundResults();
 	List<Tuple<Integer, Double>> scores       = Utils.score(roundResults,
 								Utils.roundResultToCumulativeResult(roundResults));
@@ -161,20 +157,31 @@ public class THGEngine extends RobocodeEngine
 	List<List<IRobotSnapshot>> roundResults;
 	List<IRobotSnapshot> newRoundResult;
 
+	public SimpleListener(){
+	    roundResults = new ArrayList<List<IRobotSnapshot>>();
+	}
+
 	@Override
-	public void onTurnEnded(final TurnEndedEvent event)
+	public synchronized void onTurnEnded(final TurnEndedEvent event)
 	{
 	    newRoundResult = Arrays.asList(event.getTurnSnapshot().getRobots());
 	}
 
 	@Override
-	public void onRoundEnded(final RoundEndedEvent event) { roundResults.add(newRoundResult); }
+	public synchronized void onRoundEnded(final RoundEndedEvent event) { roundResults.add(newRoundResult); }
 
 	@Override
-	public void onBattleCompleted(BattleCompletedEvent e) { notifyAll();               	  }
+	public synchronized void onBattleCompleted(BattleCompletedEvent e) {
+	    System.out.println(e);
+	    System.out.println(roundResults);
+	    notifyAll();
+	}
 	
-	public List<List<RoundResult>> getRoundResults()
+	public synchronized List<List<RoundResult>> getRoundResults()
 	{
+	    System.out.println("Application Thread is waiting--");
+	    try { wait(); } catch (Exception e) { throw new RuntimeException(e.toString()); }
+	    System.out.println("Application thread has woken up");
 	    List<List<RoundResult>> result = new ArrayList<List<RoundResult>>();
 	    for(int i = 0; i < roundResults.size(); i++){
 		List<RoundResult> newElem = new ArrayList<RoundResult>();
@@ -183,6 +190,7 @@ public class THGEngine extends RobocodeEngine
 		}
 		result.add(newElem);
 	    }
+	    roundResults.clear();
 	    return result;
 	}
 
