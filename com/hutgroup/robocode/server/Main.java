@@ -10,6 +10,18 @@ public class Main
      * Main interface to the THGEngine
      */
 
+    public static void main(String []args)
+    {
+	Scanner sc = new Scanner(System.in);
+	int n = sc.nextInt();
+	String jars [] = new String[n];
+	for(int i = 0; i < n; i++){
+	    jars[i] = sc.next();
+	}
+	runner(jars, 10, 2, 5, 15, 500, 500, 100);
+    }
+
+
     public static void runner(String[]jars,
 			      int groupMaxBound,
 			      int groupMinBound,
@@ -29,7 +41,7 @@ public class Main
 	 */
 
 	assert groupMinBound <= groupMaxBound;
-	assert minGroupSize <= maxGroupSize;
+	assert minGroupSize <= maxGroupSize : String.format("Min: %d, Max: %d", minGroupSize, maxGroupSize);
 	assert jars.length >= groupMinBound*minGroupSize;
 	assert jars.length <= groupMaxBound*maxGroupSize;
 	assert width >= 400 && width <= 5000;
