@@ -91,7 +91,7 @@ public class Utils
 	int groupSize = numCompetitors/numGroups;
 
 	assert(groupSize <= maxGroupSize);
-	assert(groupSize >= minGroupSize);
+	assert groupSize >= minGroupSize : String.format("GroupSize: %d, Min Value: %d", groupSize, minGroupSize);
 	assert(numGroups <= groupMaxBound);
 	assert(numGroups >= groupMinBound);
 

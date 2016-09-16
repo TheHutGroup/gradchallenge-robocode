@@ -25,69 +25,12 @@ public class UtilTest {
 
     }
 
-    private static RobotSpecification roboSpec(int i){
-	String id = i + "";
-	return RobotSpecificationTest.createRobotSpecification(null,
-							   id,
-							   id,
-							   "",
-							   "",
-							   "",
-							   "josh.jar",
-							   "josh.Corners",
-							   "");
-    }
-
-    
-
-    public static RobotSpecification[] initCompetitors(int n)
-    {
-	RobotSpecification [] rs = new RobotSpecification[n];
-
-	for(int i = 0; i < n; i++)
-	{
-	    rs[i] = roboSpec(i);
-	}
-
-	return rs;
-
-    }
-
-    private static RoundResult robotResult(int round, int robot)
-    {
-	double e = Math.random()*100;
-	double r = Math.random()*100;
-	double g = Math.random()*100;
-
-	return new RoundResult(round, robot, e, r, g);
-
-    }
-
-    public static List<List<RoundResult>> initRoundResults(int rounds, int numRobots)
-    {
-
-	List<List<RoundResult>> result = new LinkedList<List<RoundResult>>();
-
-	for(int round = 0; round < rounds; round++)
-	{
-	    List<RoundResult> newRound = new ArrayList<RoundResult>();
-
-	    for(int robot = 0; robot < numRobots; robot++) { newRound.add(robotResult(round, robot)); }
-
-	    result.add(newRound);
-
-	}
-
-	return result;
-
-    }
-
     public static void runTests(int rounds, int numCompetitors)
     {
 	RobotSpecification[] competitors = initCompetitors(numCompetitors);
 
 
-	for(int i = 10; i <= 200; i++) { testDetermineGroupInfo(i, 10, 2, 5, 20); }
+	for(int i = 10; i <= 150; i++) { testDetermineGroupInfo(i, 10, 2, 5, 15); }
 	System.out.println("testDetermineGroupInfo            passes");
 
 
@@ -95,7 +38,7 @@ public class UtilTest {
 	System.out.println("testBracket                       passes");
 
 
-	List<List<RobotSpecification>> brackets = Utils.bracket(competitors, 10, 2, 5, 20);
+	List<List<RobotSpecification>> brackets = Utils.bracket(competitors, 10, 2, 5, 15);
 	testMapToBattle(brackets, 500, 500, 10);
 	System.out.println("testMapToBattle                   passes");
 
@@ -227,6 +170,63 @@ public class UtilTest {
 		assert(rr.getPlayerId() == robot);
 	    }
 	}
+
+    }
+
+    private static RobotSpecification roboSpec(int i){
+	String id = i + "";
+	return RobotSpecificationTest.createRobotSpecification(null,
+							   id,
+							   id,
+							   "",
+							   "",
+							   "",
+							   "josh.jar",
+							   "josh.Corners",
+							   "");
+    }
+
+    
+
+    public static RobotSpecification[] initCompetitors(int n)
+    {
+	RobotSpecification [] rs = new RobotSpecification[n];
+
+	for(int i = 0; i < n; i++)
+	{
+	    rs[i] = roboSpec(i);
+	}
+
+	return rs;
+
+    }
+
+    private static RoundResult robotResult(int round, int robot)
+    {
+	double e = Math.random()*100;
+	double r = Math.random()*100;
+	double g = Math.random()*100;
+
+	return new RoundResult(round, robot, e, r, g);
+
+    }
+
+    public static List<List<RoundResult>> initRoundResults(int rounds, int numRobots)
+    {
+
+	List<List<RoundResult>> result = new LinkedList<List<RoundResult>>();
+
+	for(int round = 0; round < rounds; round++)
+	{
+	    List<RoundResult> newRound = new ArrayList<RoundResult>();
+
+	    for(int robot = 0; robot < numRobots; robot++) { newRound.add(robotResult(round, robot)); }
+
+	    result.add(newRound);
+
+	}
+
+	return result;
 
     }
 

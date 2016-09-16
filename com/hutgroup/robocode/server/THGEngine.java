@@ -1,5 +1,6 @@
 package com.hutgroup.robocode.server;
 
+import java.io.*;
 import com.hutgroup.robocode.utils.Tuple;
 import robocode.BattleResults;
 import java.sql.*;
@@ -20,12 +21,16 @@ public class THGEngine extends RobocodeEngine
     boolean        logToDB;
     Connection     conn;
     SimpleListener listener;
+    File           robocodeHome;
 
-    public THGEngine(String connString, String user, String password)
+    public THGEngine(File robocodeHome, String connString, String user, String password)
     {
 	/**
 	 * Creates the robocode screen and sets up a connection to the database
 	 */
+
+	super(robocodeHome);
+
 	setVisible(true);
 
 	listener = new SimpleListener();	

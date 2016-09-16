@@ -1,5 +1,6 @@
 package com.hutgroup.robocode.server;
 
+import java.io.*;
 import java.util.*;
 import robocode.control.RobotSpecification;
 import robocode.control.RobocodeEngine;
@@ -10,15 +11,21 @@ public class Main
      * Main interface to the THGEngine
      */
 
+    private static final String JDBC_CONN_STRING = "jdbc:mysql://localhost:3306/robocode";
+    public  static final String ROBOCODE_HOME    = "C:/robocode";
+    private static final String DB_USERNAME      = "root";
+    private static final String DB_PASSWORD      = "";
+
     public static void main(String []args)
     {
-	Scanner sc = new Scanner(System.in);
-	int n = sc.nextInt();
-	String jars [] = new String[n];
-	for(int i = 0; i < n; i++){
-	    jars[i] = sc.next();
-	}
+	Scanner  sc    = new Scanner(System.in);
+	int      n     = sc.nextInt();
+	String[] jars  = new String[n];
+
+	for(int i = 0; i < n; i++){  jars[i] = sc.next(); }
+
 	runner(jars, 10, 2, 5, 15, 500, 500, 100);
+
     }
 
 
@@ -48,8 +55,10 @@ public class Main
 	assert height >= 400 && height <= 5000;
 	assert numRounds <= 1000;
 
-	THGEngine                      engine  = new THGEngine("jdbc:mysql://localhost:3306/robocode", "root", "");
+	THGEngine                      engine  = new THGEngine(new File(ROBOCODE_HOME), JDBC_CONN_STRING, DB_USERNAME, DB_PASSWORD);
 	RobotSpecification[]           specs   = Utils.mapToSpecs(engine, jars);
+	assert specs.length == jars.length: String.format("Number of jars loaded != number requested: Loaded: %d, Expected: %d", specs.length, jars.length);
+	
 	List<List<RobotSpecification>> groups  = Utils.bracket(specs, groupMaxBound, groupMinBound, minGroupSize, maxGroupSize);
 	List<Battle>                   battles = Utils.mapToBattle(groups, width, height, numRounds);
 	List<RobotSpecification>       winners = new ArrayList<RobotSpecification>();
