@@ -51,7 +51,9 @@ public class THGEngine extends RobocodeEngine
 
 	runBattle(b.getBattleSpecification(), false);
 
-	try { listener.wait(); } catch (Exception e) { throw new RuntimeException("Crash"); }
+	synchronized (listener) {
+	    try { listener.wait(); } catch (Exception e) { throw new RuntimeException(e.toString()); }
+	}
 
 	List<List<RoundResult>>      roundResults = listener.getRoundResults();
 	List<Tuple<Integer, Double>> scores       = Utils.score(roundResults,
@@ -83,8 +85,17 @@ public class THGEngine extends RobocodeEngine
 
     }
 
-    public void displayBattleScreen (List<RobotSpecification> winners) { throw new RuntimeException("TODO"); }
-    public void displayWinner       (RobotSpecification       winner)  { throw new RuntimeException("TODO"); }
+    public void displayBattleScreen (List<RobotSpecification> winners)
+    {
+	for(RobotSpecification r : winners){
+	    System.out.println(r.getTeamId());
+	}
+    }
+    
+    public void displayWinner (RobotSpecification winner)
+    {
+	System.out.println(winner.getTeamId());
+    }
 
 
 

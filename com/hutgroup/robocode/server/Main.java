@@ -24,7 +24,7 @@ public class Main
 
 	for(int i = 0; i < n; i++){  jars[i] = sc.next(); }
 
-	runner(jars, 10, 2, 5, 15, 500, 500, 100);
+	runner(jars, 10, 2, 5, 15, 500, 500, 1);
 
     }
 
