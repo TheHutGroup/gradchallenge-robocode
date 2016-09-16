@@ -58,7 +58,7 @@ public class THGEngine extends RobocodeEngine
 	    executeStatements(toRoundInfoStatements(b.battleId, roundResults));
 	}
 	
-	throw new RuntimeException("TODO: Implement this - Utils.extractWinner(roundResults, b.getCompetitors());");
+	throw Utils.extractWinner(scores, b.getCompetitors());
     
     }
 
