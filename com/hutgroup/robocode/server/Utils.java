@@ -26,7 +26,13 @@ public class Utils
     }
 
     private static RobotSpecification[] toArray(List<RobotSpecification> inp){
-	return (RobotSpecification[])(inp.toArray());
+	RobotSpecification[] result = new RobotSpecification[inp.size()];
+	int counter = 0;
+	for(RobotSpecification r : inp){
+	    result[counter] = r;
+	    counter++;
+	}
+	return result;
     }
 
 
@@ -36,19 +42,26 @@ public class Utils
 						   
     public static Tuple<Integer, Integer> determineGroupInfo(int numCompetitors, int groupMaxBound, int groupMinBound, int minGroupSize, int maxGroupSize)
     {
+	assert(groupMaxBound >= groupMinBound);
+	assert(minGroupSize <= maxGroupSize);
 
-	int minGSize = 0;
-	int maxGSize = 0;
+	int minNumGroups = groupMaxBound;
+	int maxNumGroups = groupMinBound;
 
-	for(int g = groupMaxBound; g >= groupMinBound; g--){
+	for(int g = groupMinBound; g <= groupMaxBound; g++){
 	    if(numCompetitors/g <= maxGroupSize && numCompetitors/g >= minGroupSize){
-		minGSize = Math.min(minGSize, g);
-		maxGSize = Math.max(maxGSize, g);
+		minNumGroups = Math.min(minNumGroups, g);
+		maxNumGroups = Math.max(maxNumGroups, g);
 	    }
 	}
 
-	int groupSize = (minGSize + maxGSize)/2;
-	int numGroups = numCompetitors/groupSize;
+	int numGroups = (minNumGroups + maxNumGroups)/2;
+	int groupSize = numCompetitors/numGroups;
+
+	assert(groupSize <= maxGroupSize);
+	assert(groupSize >= minGroupSize);
+	assert(numGroups <= groupMaxBound);
+	assert(numGroups >= groupMinBound);
 
 	return new Tuple<Integer, Integer>(groupSize, numGroups);
 
@@ -66,19 +79,25 @@ public class Utils
 	int numGroups = groupInfo.snd();
 	List<List<RobotSpecification>> result = new ArrayList<List<RobotSpecification>>();
 	List<RobotSpecification> newGroup = new ArrayList<RobotSpecification>();
-	for(int size = 0, i = 0; i < numGroups; i++)
+	for(int i = 0; i < competitors.length; i++)
 	{
 	    newGroup.add(competitors[i]);
-	    size++;
-	    if(size == groupSize){
+	    if(newGroup.size() == groupSize){
 		result.add(newGroup);
 		newGroup = new ArrayList<RobotSpecification>();
+		
 	    }
 	}
 
-	
+	if(!newGroup.isEmpty()){
+	    for(int i = 0;i < newGroup.size(); i++){
+		result.get(i).add(newGroup.get(i));
+	    }
+	    
+	}
 
 	return result;
+
     }
 
     

@@ -73,26 +73,27 @@ public class UtilTest {
 
     public static void runTests(int rounds, int numCompetitors)
     {
-	RobotSpecification[] competitors = initCompetitors(numCompetitors);
-	
-	testBracket(competitors, 10, 2, 5, 20);
-	System.out.println("testBracket passes");
-
-
-	List<List<RobotSpecification>> brackets = Utils.bracket(competitors, 2, 10, 5, 20);
-	
-	
 	for(int i = 10; i <= 200; i++){
 	    testDetermineGroupInfo(i, 10, 2, 5, 20);
 	}
-	System.out.println("testDetermineGroupInfo passes");
+	System.out.println("testDetermineGroupInfo            passes");
+
+	RobotSpecification[] competitors = initCompetitors(numCompetitors);
+
+	testBracket(competitors, 10, 2, 5, 20);
+	System.out.println("testBracket                       passes");
+
+	List<List<RobotSpecification>> brackets = Utils.bracket(competitors, 10, 2, 5, 20);
 	
-	testMapToBattle(brackets, 100, 100, 10);
-	System.out.println("testMapToBattle passes");
+	
+	
+	testMapToBattle(brackets, 500, 500, 10);
+	System.out.println("testMapToBattle                   passes");
 
 
 	List<List<RoundResult>> roundResults = initRoundResults(rounds, numCompetitors);
 	testRoundResultToCumulativeResult(roundResults);
+	System.out.println("testRoundResultToCumulativeResult passes");
 
     }
 
@@ -109,8 +110,8 @@ public class UtilTest {
     public static void testDetermineGroupInfo(int numCompetitors, int groupMaxBound, int groupMinBound, int minGroupSize, int maxGroupSize){
 	// test that the resulting size and number are within the expected bounds
 	Tuple<Integer, Integer> result = Utils.determineGroupInfo(numCompetitors, groupMaxBound, groupMinBound, minGroupSize, maxGroupSize);
-	assert(result.fst() <= groupMaxBound && result.fst() >= groupMinBound);
-	assert(result.fst() <= maxGroupSize && result.fst() >= minGroupSize);	
+	assert(result.fst() <= maxGroupSize && result.fst() >= minGroupSize);
+	assert(result.snd() <= groupMaxBound && result.snd() >= groupMinBound);
     }
 
     public static void testBracket(RobotSpecification[] competitors, int groupMaxBound, int groupMinBound, int minGroupSize, int maxGroupSize){
@@ -120,7 +121,8 @@ public class UtilTest {
 	// test that the difference between the maximum and the minimum number of robots in a group <= 1
 	List<List<RobotSpecification>> result = Utils.bracket(competitors, groupMaxBound, groupMinBound, minGroupSize, maxGroupSize);
 	List<RobotSpecification> flattenedResult = flatten(result);
-	Set<RobotSpecification> resultSet = new HashSet<RobotSpecification>(flattenedResult);
+	assert(flattenedResult.size() == competitors.length) : String.format("Expected size: %d, Got: %d", competitors.length, flattenedResult.size());
+
 	for(RobotSpecification c : competitors){
 	    assert(containsRobotSpec(flattenedResult, c));
 	}
@@ -133,8 +135,6 @@ public class UtilTest {
 	    }
 	}
 	
-	assert(flattenedResult.size() == competitors.length);
-
 	int maxRobotsInBracket = result.get(0).size();
 	int minRobotsInBracket = result.get(0).size();
 	
