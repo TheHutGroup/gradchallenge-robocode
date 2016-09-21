@@ -80,3 +80,22 @@
 
 .. Compilation Instruction:
 . , java -cp ".;../../../Downloads/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar" DBConnect
+* Problems:
+.. The way we give player Ids is wrong
+. , They are distinct only within a battle
+. , We need a way of getting a player Identifier - 
+.  . Whatever solution you come up with note that there will be two rounds so
+.  . playerids assigned in the first round will require you to have them present in 
+.  . the second round as well.
+.. Doesnt wait in between rounds
+.. When setting up the code remember that you will need to be able to connect to the database
+.. You will also have to download the mysql jdbc driver
+.. You will also have to set up the classpath for the variables
+.. You might also have to change the urls in THGEngine for connecting to the database
+.. You also need to fill the players information before you set up
+* Fixed Problems:
+.. Failing to log to the database
+.. The second round weirdly had only two robots
+.. The winners are getting returned as null
+. , This is most likely because the players are not getting added properly into the map
+. , Diagnose by checking out extractWinner

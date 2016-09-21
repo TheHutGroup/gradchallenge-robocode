@@ -1,6 +1,6 @@
 package com.hutgroup.robocode.server;
 
-import java.util.List;
+import java.util.*;
 import robocode.control.*;
 
 
@@ -20,6 +20,16 @@ public class Battle
 	this.competitors = competitors;
 	this.spec        = new BattlefieldSpecification(width, height);
 	this.bSpec       = new BattleSpecification(numRounds, spec, competitors);
+    }
+
+    public Map<String, RobotSpecification> getCompetitorsMap()
+    {
+	Map<String, RobotSpecification> result = new HashMap<String, RobotSpecification>();
+	
+	for(RobotSpecification spec : competitors) { result.put(spec.getName(), spec); }
+
+	return result;
+
     }
 
     public int                  getBattleId()            { return battleId;    }

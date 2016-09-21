@@ -10,10 +10,10 @@ public class RoundResult
     double energyLeft;
     double ramDamage;
     double gunDamage;
-    int    playerId;
+    String playerId;
     int    roundId;
 
-    public RoundResult(int roundId, int playerId, double energyLeft, double ramDamage, double gunDamage)
+    public RoundResult(int roundId, String playerId, double energyLeft, double ramDamage, double gunDamage)
     {
 	this.energyLeft = energyLeft;
 	this.ramDamage  = ramDamage;
@@ -26,6 +26,6 @@ public class RoundResult
     public double getEnergyLeft() { return energyLeft; }
     public double getRamDamage () { return ramDamage;  }
     public double getGunDamage () { return gunDamage;  }
-    public int    getPlayerId  () { return playerId;   }
+    public String getPlayerId  () { return playerId;   }
 
 }

@@ -187,11 +187,11 @@ public class Utils
     }
 
 
-    private static Tuple<Integer, Double> maxPlayerScorePair(List<Tuple<Integer, Double>> tuples)
+    private static Tuple<String, Double> maxPlayerScorePair(List<Tuple<String, Double>> tuples)
     {
-	Tuple<Integer, Double> tuplePair = tuples.get(0);
+	Tuple<String, Double> tuplePair = tuples.get(0);
 
-	for(Tuple<Integer, Double> t : tuples)
+	for(Tuple<String, Double> t : tuples)
 	{
 	    if(t.snd() > tuplePair.snd()) { t = tuplePair; }
 	}
@@ -200,10 +200,13 @@ public class Utils
 	
     }
 
-    public static RobotSpecification extractWinner(List<Tuple<Integer, Double>> results, RobotSpecification[] spec)
+    public static RobotSpecification extractWinner(List<Tuple<String, Double>> results, Map<String, RobotSpecification> spec)
     {
-	//  a list of results 
-	return spec[maxPlayerScorePair(results).fst()];
+	//  a list of results
+	assert spec.get(maxPlayerScorePair(results).fst()) != null : String.format("Key %s, is not present in the map: %s",
+										maxPlayerScorePair(results).fst(),
+										spec);
+	return spec.get(maxPlayerScorePair(results).fst());
     }
 
     private static double S(RoundResult round, CumulativeRoundResult cumResult)
@@ -211,9 +214,9 @@ public class Utils
 	return round.getGunDamage()/cumResult.getGunDamage() + round.getRamDamage()/cumResult.getRamDamage()*1.5 + round.getEnergyLeft()/cumResult.getEnergyLeft();
     }
 
-    public static Map<Integer, List<RoundResult>> splitIntoRoundResultsPerBot(List<List<RoundResult>> res)
+    public static Map<String, List<RoundResult>> splitIntoRoundResultsPerBot(List<List<RoundResult>> res)
     {
-	Map<Integer, List<RoundResult>> mp = new HashMap<Integer, List<RoundResult>>();
+	Map<String, List<RoundResult>> mp = new HashMap<String, List<RoundResult>>();
 
 	for(List<RoundResult> lrr : res)
 	{
@@ -228,18 +231,25 @@ public class Utils
 	    }
 	}
 
+	for(String key : mp.keySet()){
+	    assert mp.get(key).size() == res.size() : String.format("playerId %s, result-set size: %d; actual number of rounds: %d",
+								    key,
+								    mp.get(key).size(),
+								    res.size());
+	}
+
 	return mp;
 
     }
 
-    public static List<Tuple<Integer, Double>> score(List<List<RoundResult>> roundResults, List<CumulativeRoundResult> cumRes)
+    public static List<Tuple<String, Double>> score(List<List<RoundResult>> roundResults, List<CumulativeRoundResult> cumRes)
     {
-	List<Tuple<Integer, Double>>    result = new ArrayList<Tuple<Integer, Double>>();
-	Map<Integer, List<RoundResult>> mp     = splitIntoRoundResultsPerBot(roundResults);
+	List<Tuple<String, Double>>    result = new ArrayList<Tuple<String, Double>>();
+	Map<String, List<RoundResult>> mp     = splitIntoRoundResultsPerBot(roundResults);
 
-	for(int key : mp.keySet())
+	for(String key : mp.keySet())
 	{
-	    result.add(new Tuple<Integer, Double>(key,
+	    result.add(new Tuple<String, Double>(key,
 						  scoreOne(mp.get(key), cumRes)
 						 )
 		       );
@@ -250,17 +260,21 @@ public class Utils
     }
 
     public static double scoreOne(List<RoundResult> rounds, List<CumulativeRoundResult> cumResult){
+	
+	assert rounds.size() == cumResult.size() : String.format("Number of Rounds: %d, Number of Cumulative Results: %d",
+								 rounds.size(),
+								 cumResult.size());
 
 	double matchScore = 0;
 
 	for(int i = 1; i <= rounds.size(); i++){
-
-	    matchScore += 2.1 * 10e-4 *i * S(rounds.get(i), cumResult.get(i));
+	    matchScore += 2.1 * 10e-4 *i * S(rounds.get(i-1),
+					     cumResult.get(i-1));
 
 	}
 
 
-	for(int k = rounds.size()-3; k < rounds.size(); k++){
+	for(int k = rounds.size()-3; k >= 0 && k < rounds.size(); k++){
 
 	    matchScore += S(rounds.get(k), cumResult.get(k));
 

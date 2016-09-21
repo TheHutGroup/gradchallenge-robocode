@@ -36,11 +36,17 @@ public class THGEngine extends RobocodeEngine
 	listener = new SimpleListener();	
 	addBattleListener(listener);
 
-	try {
+	try
+	{
 	    conn = DriverManager.getConnection(connString, user, password);
 	    logToDB = true;
 	}
-	catch(Exception e){ logToDB = false; }
+	catch(Exception e)
+	{
+	    logToDB = false;
+	    System.out.println("Not logging to the database");
+	}
+	
     }
     
     public RobotSpecification runBattle(Battle b)
@@ -52,7 +58,7 @@ public class THGEngine extends RobocodeEngine
 	runBattle(b.getBattleSpecification(), false);
 
 	List<List<RoundResult>>      roundResults = listener.getRoundResults();
-	List<Tuple<Integer, Double>> scores       = Utils.score(roundResults,
+	List<Tuple<String, Double>> scores       = Utils.score(roundResults,
 								Utils.roundResultToCumulativeResult(roundResults));
 
 	if(logToDB)
@@ -61,7 +67,7 @@ public class THGEngine extends RobocodeEngine
 	    executeStatements(toRoundInfoStatements(b.battleId, roundResults));
 	}
 	
-	return Utils.extractWinner(scores, b.getCompetitors());
+	return Utils.extractWinner(scores, b.getCompetitorsMap());
     
     }
 
@@ -75,8 +81,8 @@ public class THGEngine extends RobocodeEngine
 	for(String sqlStatement : sqlStatements){
 	    try {
 		stmt = conn.createStatement();
-		stmt.executeQuery(sqlStatement);
-	    } catch (Exception e) {System.err.println("Failed to log: " + sqlStatement);}
+		stmt.executeUpdate(sqlStatement);
+	    } catch (Exception e) {System.err.println("Failed to log: " + sqlStatement + "\n" + e.toString());}
 	}
 
     }
@@ -97,7 +103,7 @@ public class THGEngine extends RobocodeEngine
 
     private String toRoundInfoStatement(int battleId, RoundResult result)
     {
-	    return String.format("insert into roundinfo (battleid, roundid, playerid, energyLeft, ramDamage, gunDamage) values (%d, %d, %d, %d, %d, %d)",
+	    return String.format("insert into roundinfo (battleid, roundid, playerid, energyLeft, ramDamage, gunDamage) values (%d, %d, \"%s\", %f, %f, %f)",
 				 battleId,
 				 result.roundId,
 				 result.playerId,
@@ -123,18 +129,18 @@ public class THGEngine extends RobocodeEngine
     }
 
 
-    private String toBattleInfoStatement(int battleId, int playerId, int playerRank)
+    private String toBattleInfoStatement(int battleId, String playerId, int playerRank)
     {
-	return String.format("insert into battleinfo (battleid, playerid, rank) values (%d, %d, %d)",
+	return String.format("insert into battleinfo (battleid, playerid, rank) values (%d, \"%s\", %d)",
 			     battleId,
 			     playerId,
 			     playerRank);
     }
 
-    private List<String> toBattleInfoStatements(int battleId, List<Tuple<Integer, Double>> scores)
+    private List<String> toBattleInfoStatements(int battleId, List<Tuple<String, Double>> scores)
     {
-	Collections.sort(scores, new Comparator<Tuple<Integer, Double>>(){
-		public int compare(Tuple<Integer, Double> t1, Tuple<Integer, Double> t2)
+	Collections.sort(scores, new Comparator<Tuple<String, Double>>(){
+		public int compare(Tuple<String, Double> t1, Tuple<String, Double> t2)
 		{
 		    return (int)((t2.snd() - t1.snd())*ACCURACY);
 		}
@@ -172,16 +178,12 @@ public class THGEngine extends RobocodeEngine
 
 	@Override
 	public synchronized void onBattleCompleted(BattleCompletedEvent e) {
-	    System.out.println(e);
-	    System.out.println(roundResults);
 	    notifyAll();
 	}
 	
 	public synchronized List<List<RoundResult>> getRoundResults()
 	{
-	    System.out.println("Application Thread is waiting--");
 	    try { wait(); } catch (Exception e) { throw new RuntimeException(e.toString()); }
-	    System.out.println("Application thread has woken up");
 	    List<List<RoundResult>> result = new ArrayList<List<RoundResult>>();
 	    for(int i = 0; i < roundResults.size(); i++){
 		List<RoundResult> newElem = new ArrayList<RoundResult>();
@@ -190,18 +192,19 @@ public class THGEngine extends RobocodeEngine
 		}
 		result.add(newElem);
 	    }
-	    roundResults.clear();
+	    roundResults = new LinkedList<List<IRobotSnapshot>>();
 	    return result;
 	}
 
 	private RoundResult toRoundResult(int roundId, IRobotSnapshot robotSnapshot)
 	{
 	    
-	    double energyLeft = robotSnapshot.getEnergy();
-	    int playerId = robotSnapshot.getTeamIndex();
-	    IScoreSnapshot snapshot = robotSnapshot.getScoreSnapshot();
-	    double gunDamage = snapshot.getCurrentBulletDamageScore() + snapshot.getCurrentBulletKillBonus();
-	    double ramDamage = snapshot.getCurrentRammingDamageScore() + snapshot.getCurrentRammingKillBonus();
+	    double         energyLeft = robotSnapshot.getEnergy();
+	    IScoreSnapshot snapshot   = robotSnapshot.getScoreSnapshot();
+	    String         playerId   = robotSnapshot.getName();
+	    double         gunDamage  = snapshot.getCurrentBulletDamageScore() + snapshot.getCurrentBulletKillBonus();
+	    double         ramDamage  = snapshot.getCurrentRammingDamageScore() + snapshot.getCurrentRammingKillBonus();
+
 	    return new RoundResult(roundId, playerId, energyLeft, ramDamage, gunDamage);
 
 	}
