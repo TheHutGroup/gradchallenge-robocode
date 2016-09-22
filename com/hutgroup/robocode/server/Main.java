@@ -15,21 +15,55 @@ public class Main
     public  static final String ROBOCODE_HOME    = "C:/robocode";
     private static final String DB_USERNAME      = "root";
     private static final String DB_PASSWORD      = "";
+    private static final String USAGE_STATEMENT  = "Args: <jdbcConnString> <dbUsername> <dbPassword> <File for robots> <groupMaxBound> <groupMinBound> <minGroupSize> <maxGroupSize> <width> <height> <numRounds>";
 
     public static void main(String []args)
     {
-	Scanner  sc    = new Scanner(System.in);
-	int      n     = sc.nextInt();
-	String[] jars  = new String[n];
+	int         groupMaxBound  = 10;
+	int         groupMinBound  = 2;
+	int         minGroupSize   = 5;
+	int         maxGroupSize   = 15;
+	int         width          = 500;
+	int         height         = 500;
+	int         numRounds      = 5;
+	String      jdbcConnString = JDBC_CONN_STRING;
+	String      dbUsername     = DB_USERNAME;
+	String      dbPassword     = DB_PASSWORD;
+	InputStream stream         = System.in;
+
+	if(args.length == 11)
+	{
+	    System.out.println(USAGE_STATEMENT);
+	    
+	    jdbcConnString = args[0];
+	    dbUsername     = args[1];
+	    dbPassword     = args[2];
+	    try { stream         = new FileInputStream(new File(args[3])); } catch (Exception e) { System.out.println(e); stream = System.in; }
+	    groupMaxBound  = Integer.parseInt(args[4]);
+	    groupMinBound  = Integer.parseInt(args[5]);
+	    minGroupSize   = Integer.parseInt(args[6]);
+	    maxGroupSize   = Integer.parseInt(args[7]);
+	    width          = Integer.parseInt(args[8]);
+	    height         = Integer.parseInt(args[9]);
+	    numRounds      = Integer.parseInt(args[10]);
+	}
+	
+	Scanner sc    = new Scanner(stream);
+	int     n     = sc.nextInt();
+
+	String[] jars = new String[n];
 
 	for(int i = 0; i < n; i++){  jars[i] = sc.next(); }
 
-	runner(jars, 10, 2, 5, 15, 500, 500, 1);
+	runner(jdbcConnString, dbUsername, dbPassword, jars, groupMaxBound, groupMinBound, minGroupSize, maxGroupSize, width, height, numRounds);
 
     }
 
 
-    public static void runner(String[]jars,
+    public static void runner(String jdbcConnString,
+			      String dbUsername,
+			      String dbPassword,
+			      String[]jars,
 			      int groupMaxBound,
 			      int groupMinBound,
 			      int minGroupSize,
@@ -55,7 +89,10 @@ public class Main
 	assert height >= 400 && height <= 5000;
 	assert numRounds <= 1000;
 
-	THGEngine                      engine  = new THGEngine(new File(ROBOCODE_HOME), JDBC_CONN_STRING, DB_USERNAME, DB_PASSWORD);
+	THGEngine                      engine  = new THGEngine(new File(ROBOCODE_HOME),
+							       jdbcConnString,
+							       dbUsername,
+							       dbPassword);
 	RobotSpecification[]           specs   = Utils.mapToSpecs(engine, jars);
 	assert specs.length == jars.length: String.format("Number of jars loaded != number requested: Loaded: %d, Expected: %d", specs.length, jars.length);
 	

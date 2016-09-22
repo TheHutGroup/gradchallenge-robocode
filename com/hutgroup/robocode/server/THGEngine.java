@@ -66,7 +66,11 @@ public class THGEngine extends RobocodeEngine
 	    executeStatements(toBattleInfoStatements(b.battleId, scores));
 	    executeStatements(toRoundInfoStatements(b.battleId, roundResults));
 	}
-	
+
+	// Wait to proceed
+	Scanner sc = new Scanner(System.in);
+	sc.nextLine();
+
 	return Utils.extractWinner(scores, b.getCompetitorsMap());
     
     }
